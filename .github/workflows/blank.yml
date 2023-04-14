@@ -33,5 +33,6 @@ jobs:
       run: |
         git config --local user.email "Aakanksha"
         git config --local user.name "aakankshasingh1223@gmail.com"
+        git add .
         git commit -m "Update appVersion in chart.yaml" chart.yaml
         git push
