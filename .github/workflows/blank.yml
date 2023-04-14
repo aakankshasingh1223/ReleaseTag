@@ -13,7 +13,14 @@ jobs:
     steps:
     - name: Checkout repositories
       uses: actions/checkout@v2
-      
+      with:
+        ref: master
+        
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: 16
+        
     - name: Fetch latest release tag
       run: |
         latest_tag=$(curl -s https://api.github.com/repos/ahmetb/kubectx/releases/latest | grep -oP '"tag_name": "\K(.*?)(?=")')
