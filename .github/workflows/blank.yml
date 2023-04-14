@@ -13,23 +13,16 @@ jobs:
     steps:
     - name: Checkout repositories
       uses: actions/checkout@v2
-      with:
-        ref: master
-        
-    - name: Set up Node.js
-      uses: actions/setup-node@v2
-      with:
-        node-version: 16
-        
+      
     - name: Fetch latest release tag
       run: |
         latest_tag=$(curl -s https://api.github.com/repos/ahmetb/kubectx/releases/latest | grep -oP '"tag_name": "\K(.*?)(?=")')
-        echo "latest_tag=$latest_tag" >> $GITHUB_ENV
+        echo "::set-output name=latest_tag::$latest_tag"
         
     - name: Update appVersion in chart.yaml
       run: |
-        latest_tag=$latest_tag
-        sed -i "s/appVersion:.*/appVersion: $latest_tag/" ./chart.yaml
+        latest_tag=${{ steps.fetch-tag-and-update-chart.outputs.latest_tag }}
+        sed -i "s/appVersion:.*/appVersion: $latest_tag/" chart.yaml
         
     - name: Commit changes
       run: |
