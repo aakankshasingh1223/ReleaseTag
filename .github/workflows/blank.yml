@@ -18,6 +18,8 @@ jobs:
       run: |
         latest_tag=$(curl -s https://api.github.com/repos/ahmetb/kubectx/releases/latest | grep -oP '"tag_name": "\K(.*?)(?=")')
         echo "latest_tag=$latest_tag" >> $GITHUB_OUTPUT
+        echo "latest_tag=$latest_tag" >> $GITHUB_STATE
+
         
         
     - name: Update appVersion in chart.yaml
