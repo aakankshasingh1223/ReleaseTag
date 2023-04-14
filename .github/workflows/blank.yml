@@ -17,7 +17,7 @@ jobs:
     - name: Fetch latest release tag
       run: |
         latest_tag=$(curl -s https://api.github.com/repos/ahmetb/kubectx/releases/latest | grep -oP '"tag_name": "\K(.*?)(?=")')
-        echo "::set-env name=latest_tag::$latest_tag"
+        echo "latest_tag=$latest_tag" >> $GITHUB_ENV
         
     - name: Update appVersion in chart.yaml
       run: |
@@ -26,8 +26,8 @@ jobs:
         
     - name: Commit changes
       run: |
-        git config user.name "Aakanksha"
-        git config user.email "aakankshasingh1223@gmail.com"
+        git config user.name "Your Name"
+        git config user.email "you@example.com"
         git add chart.yaml
         git commit -m "Update appVersion to $latest_tag"
         git push
