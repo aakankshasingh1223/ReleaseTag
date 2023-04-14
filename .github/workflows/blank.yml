@@ -1,33 +1,37 @@
-name: Fetch Latest Release Tag and Update Chart
+name: Update Chart Version
 
 on:
   push:
     branches:
-      - master
+      - releasetag
   workflow_dispatch:
 
 jobs:
-  fetch-tag-and-update-chart:
+  update_chart_version:
     runs-on: ubuntu-latest
-    
+
     steps:
-    - name: Checkout repositories
+    - name: Checkout repository
       uses: actions/checkout@v2
-      
+
     - name: Fetch latest release tag
       run: |
-        latest_tag=$(curl -s https://api.github.com/repos/ahmetb/kubectx/releases/latest | grep -oP '"tag_name": "\K(.*?)(?=")')
-        echo "latest_tag=$latest_tag" >> $GITHUB_OUTPUT
-        
-    - name: Update appVersion in chart.yaml
+        curl -s https://api.github.com/repos/ahmetb/kubectx/releases/latest \
+        | jq -r '.tag_name' \
+        | sed 's/^v//' \
+        > latest_release_tag.txt
+
+    - name: Update chart.yaml
       run: |
-        latest_tag=${{ steps.fetch-tag-and-update-chart.outputs.latest_tag }}
-        sed -i "s/appVersion:.*/appVersion: $latest_tag/" chart.yaml
-        
+        LATEST_RELEASE_TAG=$(cat latest_release_tag.txt)
+        sed -i "s/^appVersion:.*/appVersion: $LATEST_RELEASE_TAG/" chart.yaml
+
+    - name: Print updated chart.yaml
+      run: cat chart.yaml
+
     - name: Commit changes
       run: |
-        git config user.name "Aakanksha"
-        git config user.email "aakankshasingh1223@gmail.com"
-        git add chart.yaml
-        git commit -m "Update appVersion to $latest_tag"
+        git config --local user.email "github-actions[bot]@users.noreply.github.com"
+        git config --local user.name "github-actions[bot]"
+        git commit -m "Update appVersion in chart.yaml" chart.yaml
         git push
