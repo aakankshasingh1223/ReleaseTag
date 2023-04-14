@@ -1,4 +1,4 @@
 apiVersion: v2
 name: digital-service-content
 version: 0.0.1
-appVersion: 
+appVersion: 0.9.4
