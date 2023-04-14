@@ -31,6 +31,7 @@ jobs:
 
     - name: Commit changes
       run: |
+        git status
         git config --local user.email "Aakanksha"
         git config --local user.name "aakankshasingh1223@gmail.com"
         git add .
