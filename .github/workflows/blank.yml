@@ -22,10 +22,22 @@ jobs:
 
         
         
-    - name: Update appVersion in chart.yaml
+#     - name: Update appVersion in chart.yaml
+#       run: |
+#         latest_tag=${{ steps.fetch-tag-and-update-chart.outputs.latest_tag }}
+#         sed -i "s/appVersion:.*/appVersion: $latest_tag/" chart.yaml
+        
+    - name: Update Chart.yaml
+      working-directory: ${{ github.event.client_payload.domain_service }}
       run: |
-        latest_tag=${{ steps.fetch-tag-and-update-chart.outputs.latest_tag }}
-        sed -i "s/appVersion:.*/appVersion: $latest_tag/" chart.yaml
+        cat <<EOF > Chart.yaml
+        apiVersion: v2
+        name: ${{ github.event.client_payload.domain_service }}
+        version: ${{ steps.version-bump.outputs.newTag }}
+        version: '${{ github.event.client_payload.app_version }}'
+        appVersion: ${{ steps.fetch-tag-and-update-chart.outputs.latest_tag }}
+        EOF
+
         
     - name: Commit changes
       run: |
