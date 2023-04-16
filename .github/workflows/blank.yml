@@ -24,6 +24,7 @@ jobs:
         CURRENT_APP_VERSION=$(grep -E "^appVersion:" chart.yaml | awk '{print $2}')
         if [[ "$CURRENT_APP_VERSION" != "$LATEST_RELEASE_TAG" ]]; then
           sed -i "s/^appVersion:.*/appVersion: v$LATEST_RELEASE_TAG/" chart.yaml
+          git add chart.yaml
         else
           echo "appVersion in chart.yaml is already up-to-date with the latest release tag. Skipping update."
           exit 0
