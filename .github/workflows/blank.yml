@@ -15,7 +15,6 @@ jobs:
       run: |
         curl -s https://api.github.com/repos/ahmetb/kubectx/releases/latest \
         | jq -r '.tag_name' \
-        | sed 's/^v//' \
         > latest_release_tag.txt
 
     - name: Update chart.yaml
@@ -25,7 +24,7 @@ jobs:
         echo $CURRENT_APP_VERSION
         echo $LATEST_RELEASE_TAG
         if [[ "$CURRENT_APP_VERSION" != "$LATEST_RELEASE_TAG" ]]; then
-          sed -i "s/^appVersion:.*/appVersion: v$LATEST_RELEASE_TAG/" chart.yaml
+          sed -i "s/^appVersion:.*/appVersion: $LATEST_RELEASE_TAG/" chart.yaml
         
           git config --local user.email "Aakanksha"
           git config --local user.name "aakankshasingh1223@gmail.com"
