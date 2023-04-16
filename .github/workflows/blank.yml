@@ -24,7 +24,12 @@ jobs:
         CURRENT_APP_VERSION=$(grep -E "^appVersion:" chart.yaml | awk '{print $2}')
         if [[ "$CURRENT_APP_VERSION" != "$LATEST_RELEASE_TAG" ]]; then
           sed -i "s/^appVersion:.*/appVersion: v$LATEST_RELEASE_TAG/" chart.yaml
+        
+          git config --local user.email "Aakanksha"
+          git config --local user.name "aakankshasingh1223@gmail.com"
           git add chart.yaml
+          git diff-index --quiet HEAD || git commit -m "Update appVersion in chart.yaml" chart.yaml
+          git push
         else
           echo "appVersion in chart.yaml is already up-to-date with the latest release tag. Skipping update."
           exit 0
@@ -37,8 +42,4 @@ jobs:
     - name: Commit changes
       run: |
         git status
-        git config --local user.email "Aakanksha"
-        git config --local user.name "aakankshasingh1223@gmail.com"
-    
-        git diff-index --quiet HEAD || git commit -m "Update appVersion in chart.yaml" chart.yaml
-        git push
+
