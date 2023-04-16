@@ -22,6 +22,8 @@ jobs:
       run: |
         LATEST_RELEASE_TAG=$(cat latest_release_tag.txt)
         CURRENT_APP_VERSION=$(grep -E "^appVersion:" chart.yaml | awk '{print $2}')
+        echo $CURRENT_APP_VERSION
+        echo $LATEST_RELEASE_TAG
         if [[ "$CURRENT_APP_VERSION" != "$LATEST_RELEASE_TAG" ]]; then
           sed -i "s/^appVersion:.*/appVersion: v$LATEST_RELEASE_TAG/" chart.yaml
         
@@ -39,7 +41,5 @@ jobs:
       run: cat chart.yaml
       
 
-    - name: Commit changes
-      run: |
-        git status
+
 
