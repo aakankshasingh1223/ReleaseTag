@@ -35,8 +35,6 @@ jobs:
     - name: Print updated chart.yaml
       run: cat chart.yaml
       
-    - name: Ignore latest_release_tag.txt
-      run: git rm --cached latest_release_tag.txt
 
     - name: Commit changes
       run: |
